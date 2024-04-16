@@ -132,7 +132,7 @@ class _LoanFormState extends State<LoanForm> {
                   const SizedBox(height: 8),
                   Slider.adaptive(
                     value: _loanPeriod.toDouble(),
-                    min: 12,
+                    min: 6,
                     max: 60,
                     divisions: 40,
                     label: '$_loanPeriod months',
