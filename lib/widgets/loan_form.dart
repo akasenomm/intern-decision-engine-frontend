@@ -1,6 +1,3 @@
-// This file defines a `LoanForm` widget which is a stateful widget
-// that displays a loan application form.
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -10,7 +7,6 @@ import 'package:inbank_frontend/widgets/national_id_field.dart';
 import '../api_service.dart';
 import '../colors.dart';
 
-// LoanForm is a StatefulWidget that displays a loan application form.
 class LoanForm extends StatefulWidget {
   const LoanForm({Key? key}) : super(key: key);
 
@@ -27,13 +23,25 @@ class _LoanFormState extends State<LoanForm> {
   int _loanAmountResult = 0;
   int _loanPeriodResult = 0;
   String _errorMessage = '';
+  String _selectedCountry = 'Select Country';
 
-  // Submit the form and update the state with the loan decision results.
-  // Only submits if the form inputs are validated.
+  List<DropdownMenuItem<String>> _getCountryDropdown() {
+    List<String> countries = ['Select Country', 'Estonia', 'Latvia', 'Lithuania'];
+    return countries.map((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value, style: TextStyle(color: Colors.black)),
+      );
+    }).toList();
+  }
+
   void _submitForm() async {
+    if (_selectedCountry == 'Select Country') {
+      return;
+    }
     if (_formKey.currentState!.validate()) {
       final result = await _apiService.requestLoanDecision(
-          _nationalId, _loanAmount, _loanPeriod);
+          _nationalId, _loanAmount, _loanPeriod, _selectedCountry);
       setState(() {
         int tempAmount = int.parse(result['loanAmount'].toString());
         int tempPeriod = int.parse(result['loanPeriod'].toString());
@@ -53,9 +61,6 @@ class _LoanFormState extends State<LoanForm> {
     }
   }
 
-  // Builds the application form widget.
-  // The widget automatically queries the endpoint for the latest data
-  // when a field is changed.
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -89,7 +94,7 @@ class _LoanFormState extends State<LoanForm> {
                     },
                   ),
                   const SizedBox(height: 60.0),
-                  Text('Loan Amount: $_loanAmount €'),
+                  Text('Loan Amount: $_loanAmount €', style: TextStyle(color: Colors.white)),
                   const SizedBox(height: 8),
                   Slider.adaptive(
                     value: _loanAmount.toDouble(),
@@ -113,22 +118,21 @@ class _LoanFormState extends State<LoanForm> {
                           padding: EdgeInsets.only(left: 12),
                           child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text('2000€')),
+                              child: Text('2000€', style: TextStyle(color: Colors.white))),
                         ),
                       ),
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(right: 12),
                           child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text('10000€'),
-                          ),
+                              alignment: Alignment.centerRight,
+                              child: Text('10000€', style: TextStyle(color: Colors.white))),
                         ),
                       )
                     ],
                   ),
                   const SizedBox(height: 24.0),
-                  Text('Loan Period: $_loanPeriod months'),
+                  Text('Loan Period: $_loanPeriod months', style: TextStyle(color: Colors.white)),
                   const SizedBox(height: 8),
                   Slider.adaptive(
                     value: _loanPeriod.toDouble(),
@@ -152,20 +156,44 @@ class _LoanFormState extends State<LoanForm> {
                           padding: EdgeInsets.only(left: 12),
                           child: Align(
                               alignment: Alignment.centerLeft,
-                              child: Text('12 months')),
+                              child: Text('12 months', style: TextStyle(color: Colors.white))),
                         ),
                       ),
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(right: 12),
                           child: Align(
-                            alignment: Alignment.centerRight,
-                            child: Text('60 months'),
-                          ),
+                              alignment: Alignment.centerRight,
+                              child: Text('60 months', style: TextStyle(color: Colors.white))),
                         ),
                       )
                     ],
                   ),
+                  const SizedBox(height: 24.0),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      border: Border.all(
+                        color: Colors.black,
+                        width: 1.0,
+                      ),
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding: EdgeInsets.all(3.0),
+                    child: DropdownButton<String>(
+                      value: _selectedCountry,
+                      items: _getCountryDropdown(),
+                      dropdownColor: Colors.white,
+                      style: TextStyle(color: Colors.black),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedCountry = newValue!;
+                          _submitForm();
+                        });
+                      },
+                    ),
+                  )
+                  ,
                   const SizedBox(height: 24.0),
                 ],
               ),
@@ -175,10 +203,10 @@ class _LoanFormState extends State<LoanForm> {
           Column(
             children: [
               Text(
-                  'Approved Loan Amount: ${_loanAmountResult != 0 ? _loanAmountResult : "--"} €'),
+                  'Approved Loan Amount: ${_loanAmountResult != 0 ? _loanAmountResult : "--"} €', style: TextStyle(color: Colors.white)),
               const SizedBox(height: 8.0),
               Text(
-                  'Approved Loan Period: ${_loanPeriodResult != 0 ? _loanPeriodResult : "--"} months'),
+                  'Approved Loan Period: ${_loanPeriodResult != 0 ? _loanPeriodResult : "--"} months', style: TextStyle(color: Colors.white)),
               Visibility(
                   visible: _errorMessage != '',
                   child: Text(_errorMessage, style: errorMedium))

@@ -23,9 +23,10 @@ void main() {
       const personalCode = '50307172740';
       const loanAmount = 10000;
       const loanPeriod = 12;
+      const country = 'Latvia';
 
       final result = await apiService.requestLoanDecision(
-          personalCode, loanAmount, loanPeriod);
+          personalCode, loanAmount, loanPeriod, country);
 
       expect(result, isA<Map<String, String>>());
       expect(result['loanAmount'], '10000');
@@ -48,9 +49,10 @@ void main() {
       const personalCode = '50307172740';
       const loanAmount = 50000;
       const loanPeriod = 24;
+      const country = 'Estonia';
 
       final result = await apiService.requestLoanDecision(
-          personalCode, loanAmount, loanPeriod);
+          personalCode, loanAmount, loanPeriod, country);
 
       expect(result, isA<Map<String, String>>());
       expect(result['loanAmount'], '0');
