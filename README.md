@@ -30,7 +30,7 @@ To run the application, follow these steps:
 ## Functionality
 The InBank Frontend application provides a form for submitting loan applications.
 The form consists of two sliders for selecting the loan amount and loan period,
-and a text field for entering the national ID number.
+and a text field for entering the national ID number. It has a dropdown menu to select country.
 The application communicates with the backend API to calculate the approved
 loan amount and loan period, which are displayed to the user.
 
@@ -39,8 +39,7 @@ The application consists of the following main components:
 
 ### LoanForm
 The LoanForm component displays the loan application form,
-including the sliders for selecting the loan amount and loan period
-and the text field for entering the national ID number.
+including the sliders for selecting the loan amount and loan period, the text field for entering the national ID number and a dropdown menu to select country from allowed countries.
 It communicates with the backend API to calculate the approved loan amount
 and loan period based on the form inputs.
 
